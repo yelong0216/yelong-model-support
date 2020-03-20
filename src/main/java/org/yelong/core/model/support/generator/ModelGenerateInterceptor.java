@@ -5,7 +5,11 @@ package org.yelong.core.model.support.generator;
 
 /**
  * @author PengFei
+ * @deprecated 1.0.1
+ * @see GModelAndTableFilter
+ * @see GFieldAndColumnFilter
  */
+@Deprecated
 public interface ModelGenerateInterceptor {
 
 	/**

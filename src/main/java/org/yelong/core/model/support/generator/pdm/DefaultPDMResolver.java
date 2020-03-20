@@ -119,9 +119,9 @@ public class DefaultPDMResolver implements PDMResolver{
 				NodeList columnList = childNode.getChildNodes();
 				if( null != columnList && columnList.getLength()>0) {
 					for (int j = 0; j < columnList.getLength(); j++) {
-						Node column = columnList.item(j);
-						if(1 == column.getNodeType()) {
-							GFieldAndColumn fieldAndColumn = buildGFieldAndColumn(column);
+						Node columnNode = columnList.item(j);
+						if(1 == columnNode.getNodeType()) {
+							GFieldAndColumn fieldAndColumn = buildGFieldAndColumn(columnNode);
 							if( null != fieldAndColumn ) {
 								fieldAndColumns.add(fieldAndColumn);
 							}
@@ -137,21 +137,22 @@ public class DefaultPDMResolver implements PDMResolver{
 	
 	/**
 	 * 构建字段
-	 * @param column
+	 * @param columnNode
 	 * @return
 	 * @throws PDMResolverException
 	 */
-	protected GFieldAndColumn buildGFieldAndColumn(Node column) throws PDMResolverException {
-		if(1 != column.getNodeType()) {
+	protected GFieldAndColumn buildGFieldAndColumn(Node columnNode) throws PDMResolverException {
+		if(1 != columnNode.getNodeType()) {
 			throw new PDMResolverException("解析列异常：不符合的节点");
 		}
-		NodeList columnPropertyList = column.getChildNodes();
+		NodeList columnPropertyList = columnNode.getChildNodes();
 		if( null == columnPropertyList || columnPropertyList.getLength() <= 0 ) {
 			throw new PDMResolverException("解析列异常：不符合的节点");
 		}
-		String columnName = "";
+		String column = "";
 		Class<?> fieldType = null;
 		String columnDesc = "";
+		String columnName = "";
 		Long columnLength = Long.MAX_VALUE;
 		boolean mandatory = true;
 		String columnType = "";
@@ -162,9 +163,9 @@ public class DefaultPDMResolver implements PDMResolver{
 			}
 			String nodeName = columnProperty.getNodeName();
 			if("a:Code".equals(nodeName)) { // 列名
-				columnName = columnProperty.getTextContent();
+				column = columnProperty.getTextContent();
 			} else if("a:Name".equals(nodeName)) { // 列名称说明
-				columnDesc = columnProperty.getTextContent();
+				columnName = columnProperty.getTextContent();
 			} else if("a:DataType".equals(nodeName)) { // 数据类型
 				String dataType = columnProperty.getTextContent().toUpperCase();
 				if (dataType.contains("INTEGER")) {
@@ -192,8 +193,9 @@ public class DefaultPDMResolver implements PDMResolver{
 				mandatory = false;
 			}
 		}
-		DefaultGFieldAndColumn fieldAndColumn = new DefaultGFieldAndColumn(columnName,columnName,fieldType);
+		DefaultGFieldAndColumn fieldAndColumn = new DefaultGFieldAndColumn(column,column,fieldType);
 		fieldAndColumn.setDesc(columnDesc);
+		fieldAndColumn.setColumnName(columnName);
 		fieldAndColumn.setJdbcType(columnType);
 		fieldAndColumn.setMaxLength(columnLength);
 		fieldAndColumn.setAllowNull(mandatory);

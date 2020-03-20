@@ -81,4 +81,9 @@ public class GFieldAndColumnWrapper implements GFieldAndColumn{
 		return gFieldAndColumn.getDesc();
 	}
 
+	@Override
+	public String getColumnName() {
+		return gFieldAndColumn.getColumnName();
+	}
+
 }

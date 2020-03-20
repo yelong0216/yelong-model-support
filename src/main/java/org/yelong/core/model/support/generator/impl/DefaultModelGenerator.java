@@ -6,6 +6,7 @@ package org.yelong.core.model.support.generator.impl;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -14,12 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
+import org.yelong.commons.io.FileUtils;
 import org.yelong.core.model.resolve.FieldAndColumn;
 import org.yelong.core.model.support.generator.AbstractModelGenerator;
 import org.yelong.core.model.support.generator.GFieldAndColumn;
+import org.yelong.core.model.support.generator.GFieldAndColumnFilter;
 import org.yelong.core.model.support.generator.GModelAndTable;
-import org.yelong.core.model.support.generator.ModelGenerateInterceptor;
+import org.yelong.core.model.support.generator.GModelAndTableFilter;
+import org.yelong.core.model.support.generator.GModelAndTableWrapper;
 import org.yelong.core.model.support.generator.ModelGenerator;
 import org.yelong.core.model.support.generator.exception.ModelGenerateException;
 import org.yelong.core.model.support.generator.impl.tpl.TModel;
@@ -49,13 +56,44 @@ public class DefaultModelGenerator extends AbstractModelGenerator implements Mod
 	}
 
 	@Override
-	public void generate(GModelAndTable modelAndTable, File modelFile) throws ModelGenerateException {
-		TModel TModel = convert(modelAndTable);
+	public boolean generate(GModelAndTable gModelAndTable, File modelFile) throws ModelGenerateException {
+		for (GModelAndTableFilter gModelAndTableFilter : gModelAndTableFilter) {
+			gModelAndTable = gModelAndTableFilter.apply(gModelAndTable);
+		}
+		if(CollectionUtils.isNotEmpty(gFieldAndColumnFilters)) {
+			List<GFieldAndColumn> gFieldAndColumns = gModelAndTable.getGFieldAndColumns();
+			final List<GFieldAndColumn> newGFieldAndColumns = new ArrayList<>(gFieldAndColumns.size());
+			for (GFieldAndColumn gFieldAndColumn : gFieldAndColumns) {
+				for (GFieldAndColumnFilter gFieldAndColumnFilter : gFieldAndColumnFilters) {
+					gFieldAndColumn = gFieldAndColumnFilter.apply(gFieldAndColumn);
+				}
+				if( null != gFieldAndColumn ) {
+					newGFieldAndColumns.add(gFieldAndColumn);
+				}
+			}
+			gModelAndTable = new GModelAndTableWrapper(gModelAndTable) {
+				@Override
+				public List<GFieldAndColumn> getGFieldAndColumns() {
+					return newGFieldAndColumns;
+				}
+				@Override
+				public boolean existPrimaryKey() {
+					return IteratorUtils.matchesAny(getGFieldAndColumns().iterator(), x->{
+						return x.isPrimaryKey();
+					});
+				}
+			};
+		}
+		TModel tModel = convert(gModelAndTable);
+		if( null == tModel) {
+			return false;
+		}
 		try {
 			Template template = freemarkerConfiguration.getTemplate(FTL_NAME,"UTF-8");
 			Map<String,Object> root = new HashMap<>();
-			root.put("model", TModel);
-			root.put("existDateField", existDateField(modelAndTable));
+			root.put("model", tModel);
+			root.put("existDateField", existDateField(gModelAndTable));
+			root.put("existPrimaryKey", gModelAndTable.existPrimaryKey());
 			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFile), "utf-8"));
 			//生成word文件
 			template.process(root,writer);
@@ -63,6 +101,18 @@ public class DefaultModelGenerator extends AbstractModelGenerator implements Mod
 			writer.close();
 		} catch (Exception e) {
 			throw new ModelGenerateException(e);
+		}
+		return true;
+	}
+
+	@Override
+	public void generate(List<GModelAndTable> ms, File dir) throws ModelGenerateException {
+		for (GModelAndTable gModelAndTable : ms) {
+			try {
+				generate(gModelAndTable, FileUtils.createNewFileOverride(dir.getAbsolutePath(),gModelAndTable.getModelClassSimpleName()+".java"));
+			} catch (IOException e) {
+				throw new ModelGenerateException(e);
+			}
 		}
 	}
 
@@ -78,24 +128,18 @@ public class DefaultModelGenerator extends AbstractModelGenerator implements Mod
 
 	public TModel convert(GModelAndTable modelAndTable) {
 		TModel tModel = new TModel();
-		for (ModelGenerateInterceptor modelGenerateInterceptor : modelGenerateInterceptors) {
-			modelAndTable = modelGenerateInterceptor.process(modelAndTable);
-		}
 		String modelName = modelAndTable.getModelClassSimpleName();
 		tModel.setModelName(modelName);
 		tModel.setModelPackage(modelAndTable.getModelClassPackageName());
 		tModel.setTableName(modelAndTable.getTableName());
 		tModel.setModelNamePrefixLowerCase(modelName.substring(0, 1).toLowerCase()+modelName.substring(1));
 		tModel.setTableDesc(modelAndTable.getTableDesc());
-		
-		
+
+
 		List<GFieldAndColumn> fieldAndColumns = modelAndTable.getGFieldAndColumns();
 		List<TModelField> modelFields = new ArrayList<TModelField>(fieldAndColumns.size());
 		for (GFieldAndColumn fieldAndColumn : fieldAndColumns) {
 			TModelField tModelField = new TModelField();
-			for (ModelGenerateInterceptor modelGenerateInterceptor : modelGenerateInterceptors) {
-				fieldAndColumn = modelGenerateInterceptor.process(fieldAndColumn);
-			}
 			if( null == fieldAndColumn ) {
 				continue;
 			}
@@ -116,10 +160,17 @@ public class DefaultModelGenerator extends AbstractModelGenerator implements Mod
 				columnAnnotation.append(",allowNull = "+fieldAndColumn.isAllowNull());
 			}
 			//columnAnnotation.append(",jdbcType = \""+fieldAndColumn.getJdbcType()+"\"");
-			columnAnnotation.append(",desc = \""+fieldAndColumn.getDesc()+"\"");
+			String columnName = fieldAndColumn.getColumnName();
+			if(StringUtils.isNotBlank(columnName)) {
+				columnAnnotation.append(",columnName = \""+fieldAndColumn.getColumnName()+"\"");
+			}
+			String desc = fieldAndColumn.getDesc();
+			if(StringUtils.isNotBlank(desc)) {
+				columnAnnotation.append(",desc = \""+fieldAndColumn.getDesc()+"\"");
+			}
 			columnAnnotation.append(")");
 			tModelField.setColumnAnnotation(columnAnnotation.toString());
-			
+
 			modelFields.add(tModelField);
 		}
 		tModel.setModelFields(modelFields);

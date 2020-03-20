@@ -1,6 +1,9 @@
 package ${model.modelPackage};
 
 import org.yelong.core.model.annotation.Column;
+<#if existPrimaryKey == true>
+import org.yelong.core.model.annotation.PrimaryKey;
+</#if>
 import org.yelong.core.model.annotation.Table;
 import org.yelong.core.model.Model;
 
@@ -14,7 +17,7 @@ public class ${model.modelName} extends Model {
 	<#list model.modelFields as modelField>
 	
 	<#if modelField.primaryKey == "true">
-	@Id
+	@PrimaryKey
 	</#if>
 	${modelField.columnAnnotation}
 	private ${modelField.type} ${modelField.code};
@@ -28,5 +31,6 @@ public class ${model.modelName} extends Model {
 	public void set${modelField.codePrefixUpperCase}(${modelField.type} ${modelField.code}) {
 		this.${modelField.code} = ${modelField.code};
 	}
+	
 	</#list>
 }
