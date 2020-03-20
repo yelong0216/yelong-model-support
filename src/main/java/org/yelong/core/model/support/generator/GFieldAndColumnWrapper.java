@@ -7,8 +7,6 @@ import org.yelong.core.model.resolve.SelectColumnCondition;
 
 /**
  * @author PengFei
- * @date 2020年3月15日下午12:49:41
- * @since 1.0
  */
 public class GFieldAndColumnWrapper implements GFieldAndColumn{
 

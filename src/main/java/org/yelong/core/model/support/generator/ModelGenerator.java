@@ -9,8 +9,6 @@ import org.yelong.core.model.support.generator.exception.ModelGenerateException;
 
 /**
  * @author PengFei
- * @date 2020年3月12日下午7:19:48
- * @since 1.0
  */
 public interface ModelGenerator {
 	

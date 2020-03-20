@@ -10,8 +10,6 @@ import org.yelong.core.model.resolve.DefaultFieldAndColumn;
 
 /**
  * @author PengFei
- * @date 2020年3月15日下午12:25:32
- * @since 1.0
  */
 public class DefaultGFieldAndColumn extends DefaultFieldAndColumn implements GFieldAndColumn{
 
@@ -46,7 +44,5 @@ public class DefaultGFieldAndColumn extends DefaultFieldAndColumn implements GFi
 	public String toString() {
 		return "DefaultGFieldAndColumn [column=" + getColumn() + ",fieldName=" + fieldName + ", fieldType=" + fieldType + "]";
 	}
-	
-	
 	
 }

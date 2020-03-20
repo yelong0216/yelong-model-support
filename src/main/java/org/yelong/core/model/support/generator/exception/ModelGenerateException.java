@@ -5,8 +5,6 @@ package org.yelong.core.model.support.generator.exception;
 
 /**
  * @author PengFei
- * @date 2020年3月13日下午11:37:08
- * @since 1.0
  */
 public class ModelGenerateException extends Exception{
 

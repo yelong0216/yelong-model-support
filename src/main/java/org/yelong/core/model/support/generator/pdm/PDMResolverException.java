@@ -5,7 +5,6 @@ package org.yelong.core.model.support.generator.pdm;
 
 /**
  * @author PengFei
- * @date 2020年1月10日下午4:25:44
  */
 public class PDMResolverException extends Exception{
 

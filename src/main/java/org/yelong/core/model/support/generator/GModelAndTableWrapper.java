@@ -7,8 +7,6 @@ import java.util.List;
 
 /**
  * @author PengFei
- * @date 2020年3月15日下午12:49:18
- * @since 1.0
  */
 public class GModelAndTableWrapper implements GModelAndTable{
 

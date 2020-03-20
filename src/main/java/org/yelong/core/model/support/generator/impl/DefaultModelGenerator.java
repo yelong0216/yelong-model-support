@@ -30,8 +30,6 @@ import freemarker.template.Template;
 
 /**
  * @author PengFei
- * @date 2020年3月15日下午12:29:36
- * @since 1.0
  */
 public class DefaultModelGenerator extends AbstractModelGenerator implements ModelGenerator{
 

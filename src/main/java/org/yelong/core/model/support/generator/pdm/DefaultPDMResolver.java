@@ -26,8 +26,9 @@ import org.yelong.core.model.support.generator.GFieldAndColumn;
 import org.yelong.core.model.support.generator.GModelAndTable;
 
 /**
+ * pdm解析器默认实现。
+ * 类的全路径名放置的common中
  * @author PengFei
- * @date 2020年1月10日下午4:23:06
  */
 public class DefaultPDMResolver implements PDMResolver{
 
@@ -52,7 +53,6 @@ public class DefaultPDMResolver implements PDMResolver{
 			throw new PDMResolverException(e);
 		}
 	}
-	
 	
 	@Override
 	public List<GModelAndTable> resolve(InputStream is) throws PDMResolverException{

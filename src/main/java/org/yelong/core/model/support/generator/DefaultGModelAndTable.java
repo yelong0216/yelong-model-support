@@ -12,8 +12,6 @@ import org.yelong.core.model.resolve.DefaultModelAndTable;
 
 /**
  * @author PengFei
- * @date 2020年3月13日下午11:40:10
- * @since 1.0
  */
 public class DefaultGModelAndTable extends DefaultModelAndTable implements GModelAndTable{
 
