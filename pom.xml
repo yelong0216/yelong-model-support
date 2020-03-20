@@ -22,7 +22,7 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>https://github.com/yelong0216/yelong-mail</url>
+		<url>https://github.com/yelong0216/yelong-model-support</url>
 	</scm>
 	<properties>
 		<yelong.version>1.0.0</yelong.version>
