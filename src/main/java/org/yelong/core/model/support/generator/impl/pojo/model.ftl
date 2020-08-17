@@ -1,16 +1,20 @@
 package ${model.modelPackage};
 
+<#if existDateField == true>
+import java.util.Date;
+</#if>
+
+import org.yelong.core.model.Model;
 import org.yelong.core.model.annotation.Column;
 <#if existPrimaryKey == true>
 import org.yelong.core.model.annotation.PrimaryKey;
 </#if>
 import org.yelong.core.model.annotation.Table;
-import org.yelong.core.model.Model;
 
 /**
  * ${model.tableName} ${model.tableDesc}
- * @author ${model.author}
  *
+ * @author ${model.author}
  */
 @Table(value="${model.tableName}",alias="${model.modelNamePrefixLowerCase}",desc="${model.tableDesc}")
 public class ${model.modelName} extends Model {
@@ -24,10 +28,16 @@ public class ${model.modelName} extends Model {
 	</#list>
 
 	<#list model.modelFields as modelField>
+	/**
+	 * @return ${modelField.fieldAndColumn.columnName}
+	 */
 	public ${modelField.type} get${modelField.codePrefixUpperCase}() {
 		return ${modelField.code};
 	}
 
+	/**
+	 * @param ${modelField.code} ${modelField.fieldAndColumn.columnName}
+	 */
 	public void set${modelField.codePrefixUpperCase}(${modelField.type} ${modelField.code}) {
 		this.${modelField.code} = ${modelField.code};
 	}

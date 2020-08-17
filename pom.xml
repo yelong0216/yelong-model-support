@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.yelong0216</groupId>
 	<artifactId>yelong-model-support</artifactId>
-	<version>1.0.1</version>
+	<version>2.0.0</version>
 	<packaging>jar</packaging>
 	<name>yelong-model-support</name>
 	<url>https://github.com/yelong0216/yelong-model-support.git</url>
@@ -25,9 +25,10 @@
 		<url>https://github.com/yelong0216/yelong-model-support</url>
 	</scm>
 	<properties>
-		<yelong.version>1.0.1</yelong.version>
-		<yelong-core.version>${yelong.version}</yelong-core.version>
+		<maven.test.skip>true</maven.test.skip>
+		<yelong.version>[2.0.0,2.1.0)</yelong.version>
 		<freemarker.version>2.3.28</freemarker.version>
+		<ognl.version>3.1.10</ognl.version>
 		<spring.version>5.1.5.RELEASE</spring.version>
 		<spring-context-support.version>${spring.version}</spring-context-support.version>
 	</properties>
@@ -35,7 +36,18 @@
 		<dependency>
 			<groupId>com.github.yelong0216</groupId>
 			<artifactId>yelong-core</artifactId>
-			<version>${yelong-core.version}</version>
+			<version>${yelong.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.yelong0216</groupId>
+			<artifactId>yelong-support</artifactId>
+			<version>${yelong.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/ognl/ognl -->
+		<dependency>
+			<groupId>ognl</groupId>
+			<artifactId>ognl</artifactId>
+			<version>${ognl.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.freemarker/freemarker -->
 		<dependency>
@@ -47,6 +59,20 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring-context-support.version}</version>
+		</dependency>
+		<!-- test -->
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.7.0-M1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.47</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<profiles>

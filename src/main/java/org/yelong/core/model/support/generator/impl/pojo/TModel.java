@@ -1,14 +1,14 @@
 /**
  * 
  */
-package org.yelong.core.model.support.generator.impl.tpl;
+package org.yelong.core.model.support.generator.impl.pojo;
 
 import java.util.List;
 
+import org.yelong.core.model.support.generator.GModelAndTable;
+
 /**
- * 
- * @author PengFei
- * @date 2020年1月10日下午7:21:23
+ * @since 2.0
  */
 public class TModel {
 
@@ -23,6 +23,8 @@ public class TModel {
 	private String modelNamePrefixLowerCase;
 	
 	private List<TModelField> modelFields;
+	
+	private GModelAndTable gModelAndTable;
 	
 	private String author = System.getProperty("user.name");
 
@@ -80,6 +82,14 @@ public class TModel {
 
 	public void setTableDesc(String tableDesc) {
 		this.tableDesc = tableDesc;
+	}
+
+	public GModelAndTable getgModelAndTable() {
+		return gModelAndTable;
+	}
+
+	public void setgModelAndTable(GModelAndTable gModelAndTable) {
+		this.gModelAndTable = gModelAndTable;
 	}
 	
 }

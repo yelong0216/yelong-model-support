@@ -1,11 +1,12 @@
 /**
  * 
  */
-package org.yelong.core.model.support.generator.impl.tpl;
+package org.yelong.core.model.support.generator.impl.pojo;
+
+import org.yelong.core.model.manage.FieldAndColumn;
 
 /**
- * @author PengFei
- * @date 2020年1月10日下午7:21:43
+ * @since 2.0
  */
 public class TModelField {
 
@@ -24,6 +25,8 @@ public class TModelField {
 	private String codePrefixUpperCase;
 
 	private String columnAnnotation;
+	
+	private FieldAndColumn fieldAndColumn;
 	
 	public String getPrimaryKey() {
 		return primaryKey;
@@ -87,6 +90,14 @@ public class TModelField {
 
 	public void setColumnAnnotation(String columnAnnotation) {
 		this.columnAnnotation = columnAnnotation;
+	}
+
+	public FieldAndColumn getFieldAndColumn() {
+		return fieldAndColumn;
+	}
+
+	public void setFieldAndColumn(FieldAndColumn fieldAndColumn) {
+		this.fieldAndColumn = fieldAndColumn;
 	}
 	
 }

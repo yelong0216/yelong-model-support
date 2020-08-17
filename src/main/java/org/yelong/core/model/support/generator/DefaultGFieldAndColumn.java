@@ -3,33 +3,27 @@
  */
 package org.yelong.core.model.support.generator;
 
-import java.lang.reflect.Field;
 import java.util.Objects;
 
-import org.yelong.core.model.resolve.DefaultFieldAndColumn;
+import org.yelong.core.model.manage.AbstractFieldAndColumn;
 
 /**
- * @author PengFei
+ * @since 2.0
  */
-public class DefaultGFieldAndColumn extends DefaultFieldAndColumn implements GFieldAndColumn{
+public class DefaultGFieldAndColumn extends AbstractFieldAndColumn implements GFieldAndColumn {
 
-	private String fieldName;
-	
-	private Class<?> fieldType;
-	
-	public DefaultGFieldAndColumn(String column , String fieldName , Class<?> fieldType) {
-		super(null, column);
-		Objects.requireNonNull(fieldName);
-		Objects.requireNonNull(fieldType);
-		this.fieldName = fieldName;
-		this.fieldType = fieldType;
+	private final String fieldName;
+
+	private final Class<?> fieldType;
+
+	private final String column;
+
+	public DefaultGFieldAndColumn(String column, String fieldName, Class<?> fieldType) {
+		this.column = Objects.requireNonNull(column);
+		this.fieldName = Objects.requireNonNull(fieldName);
+		this.fieldType = Objects.requireNonNull(fieldType);
 	}
-	
-	@Override
-	public Field getField() {
-		throw new UnsupportedOperationException("生成器Model不允许获取字段");
-	}
-	
+
 	@Override
 	public Class<?> getFieldType() {
 		return this.fieldType;
@@ -41,8 +35,14 @@ public class DefaultGFieldAndColumn extends DefaultFieldAndColumn implements GFi
 	}
 
 	@Override
-	public String toString() {
-		return "DefaultGFieldAndColumn [column=" + getColumn() + ",fieldName=" + fieldName + ", fieldType=" + fieldType + "]";
+	public String getColumn() {
+		return column;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "DefaultGFieldAndColumn [column=" + getColumn() + ",fieldName=" + fieldName + ", fieldType=" + fieldType
+				+ "]";
+	}
+
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.yelong.core.model.support.generator.pdm;
+package org.yelong.core.model.support.generator.pdm.defaults;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,18 +24,20 @@ import org.yelong.core.model.support.generator.DefaultGFieldAndColumn;
 import org.yelong.core.model.support.generator.DefaultGModelAndTable;
 import org.yelong.core.model.support.generator.GFieldAndColumn;
 import org.yelong.core.model.support.generator.GModelAndTable;
+import org.yelong.core.model.support.generator.pdm.PDMResolver;
+import org.yelong.core.model.support.generator.pdm.PDMResolverException;
 
 /**
- * pdm解析器默认实现。
- * 类的全路径名放置的common中
- * @author PengFei
+ * pdm解析器默认实现。 类的全路径名放置的common中
+ * 
+ * @since 2.0
  */
-public class DefaultPDMResolver implements PDMResolver{
+public class DefaultPDMResolver implements PDMResolver {
 
 	private static final DocumentBuilderFactory builderFactory;
-	
+
 	private static final DocumentBuilder builder;
-	
+
 	static {
 		try {
 			builderFactory = DocumentBuilderFactory.newInstance();
@@ -44,36 +46,36 @@ public class DefaultPDMResolver implements PDMResolver{
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
-	public List<GModelAndTable> resolve(File pdm) throws PDMResolverException{
+	public List<GModelAndTable> resolve(File pdm) throws PDMResolverException {
 		try {
 			return resolve(new FileInputStream(pdm));
 		} catch (FileNotFoundException e) {
 			throw new PDMResolverException(e);
 		}
 	}
-	
+
 	@Override
-	public List<GModelAndTable> resolve(InputStream is) throws PDMResolverException{
+	public List<GModelAndTable> resolve(InputStream is) throws PDMResolverException {
 		try {
 			Document xml = builder.parse(is);
 			NodeList root = xml.getElementsByTagName("c:Tables");
-			if( null == root || root.getLength() <= 0 ) {
-				return Collections.emptyList();	
+			if (null == root || root.getLength() <= 0) {
+				return Collections.emptyList();
 			}
 			NodeList tableList = root.item(0).getChildNodes();
-			if( tableList == null || tableList.getLength() <= 0 ) {
-				return Collections.emptyList();	
+			if (tableList == null || tableList.getLength() <= 0) {
+				return Collections.emptyList();
 			}
 			List<GModelAndTable> modelAndTables = new ArrayList<GModelAndTable>();
 			for (int i = 0; i < tableList.getLength(); i++) {
 				Node table = tableList.item(i);
-				if( 1 != table.getNodeType() ) {
+				if (1 != table.getNodeType()) {
 					continue;
 				}
 				GModelAndTable modelAndTable = buildModelAndTable(table);
-				if( null != modelAndTable) {
+				if (null != modelAndTable) {
 					modelAndTables.add(modelAndTable);
 				}
 			}
@@ -85,16 +87,17 @@ public class DefaultPDMResolver implements PDMResolver{
 
 	/**
 	 * 构建模型与表
+	 * 
 	 * @param table c:Tables节点
 	 * @return 模型与表
-	 * @throws PDMResolverException 
+	 * @throws PDMResolverException
 	 */
 	protected GModelAndTable buildModelAndTable(Node table) throws PDMResolverException {
-		if(1 != table.getNodeType()) {
+		if (1 != table.getNodeType()) {
 			throw new PDMResolverException("解析表异常：不符合的节点");
 		}
 		NodeList childNodeList = table.getChildNodes();
-		if( null == childNodeList || childNodeList.getLength() <= 0 ) {
+		if (null == childNodeList || childNodeList.getLength() <= 0) {
 			return null;
 		}
 		DefaultGModelAndTable modelAndTable = null;
@@ -102,27 +105,27 @@ public class DefaultPDMResolver implements PDMResolver{
 		String tableCode = "";
 		String modelClassName = "";
 		List<GFieldAndColumn> fieldAndColumns = new ArrayList<>();
-		for (int i = 0 ; i < childNodeList.getLength() ; i ++ ) {
+		for (int i = 0; i < childNodeList.getLength(); i++) {
 			Node childNode = childNodeList.item(i);
-			if( 1 != childNode.getNodeType()) {
+			if (1 != childNode.getNodeType()) {
 				continue;
 			}
 			String childNodeName = childNode.getNodeName();
-			if("a:Name".equals(childNodeName)) {//表描述
+			if ("a:Name".equals(childNodeName)) {// 表描述
 				tableName = childNode.getTextContent();
-			} else if("a:Code".equals(childNodeName)) {//表名
+			} else if ("a:Code".equals(childNodeName)) {// 表名
 				tableCode = childNode.getTextContent();
-			} else if("a:Comment".equals(childNodeName)) {//备注->表全名称
+			} else if ("a:Comment".equals(childNodeName)) {// 备注->表全名称
 				String textContent = childNode.getTextContent();
 				modelClassName = textContent;
-			} else if("c:Columns".equals(childNodeName)) {
+			} else if ("c:Columns".equals(childNodeName)) {
 				NodeList columnList = childNode.getChildNodes();
-				if( null != columnList && columnList.getLength()>0) {
+				if (null != columnList && columnList.getLength() > 0) {
 					for (int j = 0; j < columnList.getLength(); j++) {
 						Node columnNode = columnList.item(j);
-						if(1 == columnNode.getNodeType()) {
+						if (1 == columnNode.getNodeType()) {
 							GFieldAndColumn fieldAndColumn = buildGFieldAndColumn(columnNode);
-							if( null != fieldAndColumn ) {
+							if (null != fieldAndColumn) {
 								fieldAndColumns.add(fieldAndColumn);
 							}
 						}
@@ -130,23 +133,24 @@ public class DefaultPDMResolver implements PDMResolver{
 				}
 			}
 		}
-		modelAndTable = new DefaultGModelAndTable(modelClassName,tableCode, fieldAndColumns);
+		modelAndTable = new DefaultGModelAndTable(modelClassName, tableCode, fieldAndColumns);
 		modelAndTable.setTableDesc(tableName);
 		return modelAndTable;
 	}
-	
+
 	/**
 	 * 构建字段
+	 * 
 	 * @param columnNode
 	 * @return
 	 * @throws PDMResolverException
 	 */
 	protected GFieldAndColumn buildGFieldAndColumn(Node columnNode) throws PDMResolverException {
-		if(1 != columnNode.getNodeType()) {
+		if (1 != columnNode.getNodeType()) {
 			throw new PDMResolverException("解析列异常：不符合的节点");
 		}
 		NodeList columnPropertyList = columnNode.getChildNodes();
-		if( null == columnPropertyList || columnPropertyList.getLength() <= 0 ) {
+		if (null == columnPropertyList || columnPropertyList.getLength() <= 0) {
 			throw new PDMResolverException("解析列异常：不符合的节点");
 		}
 		String column = "";
@@ -158,15 +162,15 @@ public class DefaultPDMResolver implements PDMResolver{
 		String columnType = "";
 		for (int i = 0; i < columnPropertyList.getLength(); i++) {
 			Node columnProperty = columnPropertyList.item(i);
-			if(1 != columnProperty.getNodeType()) {
+			if (1 != columnProperty.getNodeType()) {
 				continue;
 			}
 			String nodeName = columnProperty.getNodeName();
-			if("a:Code".equals(nodeName)) { // 列名
+			if ("a:Code".equals(nodeName)) { // 列名
 				column = columnProperty.getTextContent();
-			} else if("a:Name".equals(nodeName)) { // 列名称说明
+			} else if ("a:Name".equals(nodeName)) { // 列名称说明
 				columnName = columnProperty.getTextContent();
-			} else if("a:DataType".equals(nodeName)) { // 数据类型
+			} else if ("a:DataType".equals(nodeName)) { // 数据类型
 				String dataType = columnProperty.getTextContent().toUpperCase();
 				if (dataType.contains("INTEGER")) {
 					fieldType = Integer.class;
@@ -174,7 +178,8 @@ public class DefaultPDMResolver implements PDMResolver{
 				} else if (dataType.contains("FLOAT")) {
 					fieldType = Float.class;
 					columnType = "FLOAT";
-				} else if ((dataType.contains("NUMBER")) || (dataType.contains("NUMERIC")) || (dataType.contains("DECIMAL"))) {
+				} else if ((dataType.contains("NUMBER")) || (dataType.contains("NUMERIC"))
+						|| (dataType.contains("DECIMAL"))) {
 					fieldType = Double.class;
 					columnType = "NUMBER";
 				} else if ((dataType.contains("DATE")) || (dataType.contains("TIMESTAMP"))) {
@@ -184,16 +189,16 @@ public class DefaultPDMResolver implements PDMResolver{
 					fieldType = String.class;
 					columnType = "VARCHAR";
 				}
-			} else if("a:Length".equals(nodeName)) {
+			} else if ("a:Length".equals(nodeName)) {
 				String length = columnProperty.getTextContent();
-				if(StringUtils.isNotBlank(length)) {
+				if (StringUtils.isNotBlank(length)) {
 					columnLength = Long.valueOf(length);
 				}
-			} else if("a:Column.Mandatory".equals(nodeName)) {
+			} else if ("a:Column.Mandatory".equals(nodeName)) {
 				mandatory = false;
 			}
 		}
-		DefaultGFieldAndColumn fieldAndColumn = new DefaultGFieldAndColumn(column,column,fieldType);
+		DefaultGFieldAndColumn fieldAndColumn = new DefaultGFieldAndColumn(column, column, fieldType);
 		fieldAndColumn.setDesc(columnDesc);
 		fieldAndColumn.setColumnName(columnName);
 		fieldAndColumn.setJdbcType(columnType);

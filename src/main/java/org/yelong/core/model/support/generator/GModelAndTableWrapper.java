@@ -3,16 +3,17 @@
  */
 package org.yelong.core.model.support.generator;
 
-import java.util.List;
+import org.yelong.core.model.manage.wrapper.ModelAndTableWrapper;
 
 /**
- * @author PengFei
+ * @since 2.0
  */
-public class GModelAndTableWrapper implements GModelAndTable{
+public class GModelAndTableWrapper extends ModelAndTableWrapper implements GModelAndTable {
 
 	private final GModelAndTable gModelAndTable;
 
 	public GModelAndTableWrapper(GModelAndTable gModelAndTable) {
+		super(gModelAndTable);
 		this.gModelAndTable = gModelAndTable;
 	}
 
@@ -32,11 +33,6 @@ public class GModelAndTableWrapper implements GModelAndTable{
 	}
 
 	@Override
-	public List<String> getFieldNames() {
-		return gModelAndTable.getFieldNames();
-	}
-
-	@Override
 	public String getModelClassName() {
 		return gModelAndTable.getModelClassName();
 	}
@@ -52,18 +48,13 @@ public class GModelAndTableWrapper implements GModelAndTable{
 	}
 
 	@Override
-	public List<GFieldAndColumn> getGPrimaryKey() {
-		return gModelAndTable.getGPrimaryKey();
+	public String getAuthor() {
+		return gModelAndTable.getAuthor();
 	}
 
 	@Override
-	public List<GFieldAndColumn> getGFieldAndColumns() {
-		return gModelAndTable.getGFieldAndColumns();
-	}
-
-	@Override
-	public GFieldAndColumn getGFieldAndColumn(String fieldName) {
-		return gModelAndTable.getGFieldAndColumn(fieldName);
+	public void setAuthor(String author) {
+		gModelAndTable.setAuthor(author);
 	}
 
 }
