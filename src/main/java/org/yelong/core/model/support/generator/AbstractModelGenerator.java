@@ -7,9 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.yelong.commons.io.FileUtilsE;
 import org.yelong.core.model.manage.FieldAndColumn;
 import org.yelong.core.model.manage.FieldAndColumnType;
@@ -70,12 +72,17 @@ public abstract class AbstractModelGenerator implements ModelGenerator {
 
 				@Override
 				public List<FieldAndColumn> getFieldAndColumns(FieldAndColumnType... fieldAndColumnTypes) {
-					// TODO Auto-generated method stub
-					return super.getFieldAndColumns(fieldAndColumnTypes);
+					if (ArrayUtils.isEmpty(fieldAndColumnTypes)) {
+						return newGFieldAndColumns;
+					}
+					return newGFieldAndColumns.parallelStream()
+							.filter(x -> ArrayUtils.contains(fieldAndColumnTypes, x.getFieldAndColumnType()))
+							.collect(Collectors.toList());
 				}
 
-				protected List<FieldAndColumn> getFieldAndColumns() {
-					return newGFieldAndColumns;
+				@Override
+				public List<FieldAndColumn> getPrimaryKeys() {
+					return getFieldAndColumns(FieldAndColumnType.PRIMARYKEY);
 				}
 
 				@Override

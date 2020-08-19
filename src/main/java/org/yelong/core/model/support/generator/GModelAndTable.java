@@ -11,6 +11,11 @@ import org.yelong.core.model.manage.ModelAndTable;
  */
 public interface GModelAndTable extends ModelAndTable {
 
+	@Override
+	default String getModelName() {
+		return getModelClassName();
+	}
+
 	/**
 	 * @return class name
 	 */
