@@ -13,19 +13,23 @@ import org.yelong.core.model.support.generator.GModelAndTable;
 public class TModel {
 
 	private String modelPackage;
-	
+
 	private String tableName;
-	
+
 	private String tableDesc;
-	
+
 	private String modelName;
-	
+
 	private String modelNamePrefixLowerCase;
-	
+
+	private String superClassName;
+
+	private String superClassSimpleName;
+
 	private List<TModelField> modelFields;
-	
+
 	private GModelAndTable gModelAndTable;
-	
+
 	private String author = System.getProperty("user.name");
 
 	public String getModelPackage() {
@@ -91,5 +95,21 @@ public class TModel {
 	public void setgModelAndTable(GModelAndTable gModelAndTable) {
 		this.gModelAndTable = gModelAndTable;
 	}
-	
+
+	public String getSuperClassName() {
+		return superClassName;
+	}
+
+	public void setSuperClassName(String superClassName) {
+		this.superClassName = superClassName;
+	}
+
+	public String getSuperClassSimpleName() {
+		return superClassSimpleName;
+	}
+
+	public void setSuperClassSimpleName(String superClassSimpleName) {
+		this.superClassSimpleName = superClassSimpleName;
+	}
+
 }

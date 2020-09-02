@@ -3,19 +3,15 @@
  */
 package org.yelong.core.model.support.generator.impl.pojo;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.yelong.core.model.Model;
 import org.yelong.core.model.manage.FieldAndColumn;
 import org.yelong.core.model.support.generator.AbstractModelGenerator;
 import org.yelong.core.model.support.generator.GModelAndTable;
-import org.yelong.core.model.support.generator.ModelGenerateException;
 import org.yelong.support.freemarker.FreeMarkerConfigurationFactory;
 
 import freemarker.template.Configuration;
@@ -32,27 +28,26 @@ public class DefaultPOJOModelGenerator extends AbstractModelGenerator {
 	private static final String FTL_NAME = "model.ftl";
 
 	@Override
-	public boolean generate(GModelAndTable gModelAndTable, File modelFile) throws ModelGenerateException {
-		gModelAndTable = execFilter(gModelAndTable);
-		TModel tModel = convert(gModelAndTable);
-		if (null == tModel) {
-			return false;
+	protected Map<String, Object> buildTemplateParams(TModel tModel) {
+		String superClassName = tModel.getSuperClassName();
+		if (StringUtils.isBlank(superClassName)) {// 默认为MapModel
+			tModel.setSuperClassName(Model.class.getName());
 		}
-		try {
-			Template template = freemarkerConfiguration.getTemplate(FTL_NAME, "UTF-8");
-			Map<String, Object> root = new HashMap<>();
-			root.put("model", tModel);
-			root.put("existDateField", existDateField(gModelAndTable));
-			root.put("existPrimaryKey", gModelAndTable.existPrimaryKey());
-			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFile), "utf-8"));
-			// 生成word文件
-			template.process(root, writer);
-			writer.flush();
-			writer.close();
-		} catch (Exception e) {
-			throw new ModelGenerateException(e);
+		String superClassPackageName = tModel.getSuperClassSimpleName();
+		if (StringUtils.isBlank(superClassPackageName)) {// 默认为MapModel
+			tModel.setSuperClassSimpleName(Model.class.getSimpleName());
 		}
-		return true;
+		GModelAndTable gModelAndTable = tModel.getgModelAndTable();
+		Map<String, Object> root = new HashMap<>();
+		root.put("model", tModel);
+		root.put("existDateField", existDateField(gModelAndTable));
+		root.put("existPrimaryKey", gModelAndTable.existPrimaryKey());
+		return root;
+	}
+
+	@Override
+	protected Template getTemplate() throws Exception {
+		return freemarkerConfiguration.getTemplate(FTL_NAME, "UTF-8");
 	}
 
 	protected boolean existDateField(GModelAndTable modelAndTable) {
@@ -63,10 +58,6 @@ public class DefaultPOJOModelGenerator extends AbstractModelGenerator {
 			}
 		}
 		return false;
-	}
-
-	public TModel convert(GModelAndTable modelAndTable) {
-		return TModels.resolve(modelAndTable);
 	}
 
 }

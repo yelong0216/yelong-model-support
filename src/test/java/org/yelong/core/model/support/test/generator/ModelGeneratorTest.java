@@ -3,10 +3,6 @@
  */
 package org.yelong.core.model.support.test.generator;
 
-import java.io.FileNotFoundException;
-
-import org.yelong.core.model.support.generator.ModelGenerateException;
-import org.yelong.core.model.support.generator.pdm.PDMResolverException;
 import org.yelong.core.model.support.generator.support.ModelGenerateSupport;
 
 /**
@@ -20,7 +16,7 @@ public class ModelGeneratorTest {
 		});
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, PDMResolverException, ModelGenerateException {
+	public static void main(String[] args) throws Exception {
 		ModelGenerateSupport.generatePOJOModel("D:\\PowerDesigner\\数模\\generator.pdm", "D:\\PowerDesigner\\数模\\model");
 //		ModelGenerateUtils.generateMapModel("D:\\PowerDesigner\\数模\\generator.pdm", "D:\\PowerDesigner\\数模\\model");
 	}

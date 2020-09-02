@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.yelong0216</groupId>
 	<artifactId>yelong-model-support</artifactId>
-	<version>2.0.1</version>
+	<version>2.1.0</version>
 	<packaging>jar</packaging>
 	<name>yelong-model-support</name>
 	<url>https://github.com/yelong0216/yelong-model-support.git</url>
@@ -17,8 +17,8 @@
 	</licenses>
 	<developers>
 		<developer>
-			<name>彭飞</name>
-			<email>17601085125@163.com</email>
+			<name>yelong</name>
+			<email>yelong010216@163.com</email>
 		</developer>
 	</developers>
 	<scm>
@@ -26,7 +26,7 @@
 	</scm>
 	<properties>
 		<maven.test.skip>true</maven.test.skip>
-		<yelong.version>[2.0.0,2.1.0)</yelong.version>
+		<yelong.version>2.0.0</yelong.version>
 		<freemarker.version>2.3.28</freemarker.version>
 		<ognl.version>3.1.10</ognl.version>
 		<spring.version>5.1.5.RELEASE</spring.version>

@@ -4,12 +4,13 @@ package ${model.modelPackage};
 import java.util.Date;
 </#if>
 
-import org.yelong.core.model.Model;
 import org.yelong.core.model.annotation.Column;
 <#if existPrimaryKey == true>
 import org.yelong.core.model.annotation.PrimaryKey;
 </#if>
 import org.yelong.core.model.annotation.Table;
+
+import ${model.superClassName};
 
 /**
  * ${model.tableName} ${model.tableDesc}
@@ -17,7 +18,7 @@ import org.yelong.core.model.annotation.Table;
  * @author ${model.author}
  */
 @Table(value="${model.tableName}",alias="${model.modelNamePrefixLowerCase}",desc="${model.tableDesc}")
-public class ${model.modelName} extends Model {
+public class ${model.modelName} extends ${model.superClassSimpleName} {
 	<#list model.modelFields as modelField>
 	
 	<#if modelField.primaryKey == "true">

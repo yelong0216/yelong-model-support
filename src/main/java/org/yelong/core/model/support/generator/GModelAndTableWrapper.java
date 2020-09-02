@@ -3,6 +3,7 @@
  */
 package org.yelong.core.model.support.generator;
 
+import org.yelong.core.model.manage.ModelAndTable;
 import org.yelong.core.model.manage.wrapper.ModelAndTableWrapper;
 
 /**
@@ -17,44 +18,73 @@ public class GModelAndTableWrapper extends ModelAndTableWrapper implements GMode
 		this.gModelAndTable = gModelAndTable;
 	}
 
+	protected GModelAndTableWrapper(ModelAndTable modelAndTable) {
+		super(modelAndTable);
+		this.gModelAndTable = null;
+	}
+
 	@Override
 	public String getTableName() {
-		return gModelAndTable.getTableName();
+		return getgModelAndTable().getTableName();
 	}
 
 	@Override
 	public String getTableAlias() {
-		return gModelAndTable.getTableAlias();
+		return getgModelAndTable().getTableAlias();
 	}
 
 	@Override
 	public String getTableDesc() {
-		return gModelAndTable.getTableDesc();
+		return getgModelAndTable().getTableDesc();
 	}
 
 	@Override
 	public String getModelClassName() {
-		return gModelAndTable.getModelClassName();
+		return getgModelAndTable().getModelClassName();
 	}
 
 	@Override
 	public String getModelClassSimpleName() {
-		return gModelAndTable.getModelClassSimpleName();
+		return getgModelAndTable().getModelClassSimpleName();
 	}
 
 	@Override
 	public String getModelClassPackageName() {
-		return gModelAndTable.getModelClassPackageName();
+		return getgModelAndTable().getModelClassPackageName();
 	}
 
 	@Override
 	public String getAuthor() {
-		return gModelAndTable.getAuthor();
+		return getgModelAndTable().getAuthor();
 	}
 
 	@Override
 	public void setAuthor(String author) {
-		gModelAndTable.setAuthor(author);
+		getgModelAndTable().setAuthor(author);
+	}
+
+	@Override
+	public String getSuperClassName() {
+		return getgModelAndTable().getSuperClassName();
+	}
+
+	@Override
+	public void setSuperClassName(String superClassName) {
+		getgModelAndTable().setSuperClassName(superClassName);
+	}
+
+	@Override
+	public String getSuperClassSimpleName() {
+		return getgModelAndTable().getSuperClassSimpleName();
+	}
+
+	@Override
+	public void setSuperClassSimpleName(String superClassSimpleName) {
+		getgModelAndTable().setSuperClassSimpleName(superClassSimpleName);
+	}
+
+	public GModelAndTable getgModelAndTable() {
+		return gModelAndTable;
 	}
 
 }

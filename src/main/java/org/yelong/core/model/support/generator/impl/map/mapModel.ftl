@@ -5,7 +5,8 @@ import java.util.Date;
 </#if>
 
 import org.yelong.core.model.annotation.Table;
-import org.yelong.core.model.map.MapModel;
+
+import ${mode.superClassName};
 
 /**
  * ${model.tableName} ${model.tableDesc}
@@ -13,7 +14,7 @@ import org.yelong.core.model.map.MapModel;
  * @author ${model.author}
  */
 @Table(value="${model.tableName}",alias="${model.modelNamePrefixLowerCase}",desc="${model.tableDesc}")
-public class ${model.modelName} extends MapModel {
+public class ${model.modelName} extends ${model.superClassSimpleName} {
 
 	<#list model.modelFields as modelField>
 	/**${modelField.columnName}*/

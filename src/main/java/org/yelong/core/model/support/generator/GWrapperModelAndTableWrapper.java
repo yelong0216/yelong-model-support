@@ -1,42 +1,23 @@
 package org.yelong.core.model.support.generator;
 
 import org.yelong.core.model.manage.ModelAndTable;
-import org.yelong.core.model.manage.wrapper.ModelAndTableWrapper;
 
 /**
  * @since 2.0
  */
-public class GWrapperModelAndTableWrapper extends ModelAndTableWrapper implements GModelAndTable {
+public class GWrapperModelAndTableWrapper extends GModelAndTableWrapper implements GModelAndTable {
 
-	private String author;
+	private final GModelAndTable gModelAndTable;
 
 	public GWrapperModelAndTableWrapper(ModelAndTable modelAndTable) {
 		super(modelAndTable);
+		gModelAndTable = new DefaultGModelAndTable(modelAndTable.getModelName(),
+				modelAndTable.getModelClass().getSimpleName());
 	}
 
 	@Override
-	public String getModelClassName() {
-		return getModelAndTable().getModelName();
-	}
-
-	@Override
-	public String getModelClassSimpleName() {
-		return getModelAndTable().getModelClass().getSimpleName();
-	}
-
-	@Override
-	public String getModelClassPackageName() {
-		return getModelAndTable().getModelClass().getPackage().getName();
-	}
-
-	@Override
-	public String getAuthor() {
-		return author;
-	}
-
-	@Override
-	public void setAuthor(String author) {
-		this.author = author;
+	public GModelAndTable getgModelAndTable() {
+		return gModelAndTable;
 	}
 
 }

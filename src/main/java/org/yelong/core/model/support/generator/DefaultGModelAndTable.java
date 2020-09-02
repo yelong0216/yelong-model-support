@@ -19,6 +19,10 @@ public class DefaultGModelAndTable extends AbstractModelAndTable implements GMod
 
 	private String tableName;
 
+	private String superClassName;
+
+	private String superClassSimpleName;
+
 	/**
 	 * @param modelName       model 类全名称 如 org.yelong.core.model.Model
 	 * @param tableName
@@ -29,6 +33,11 @@ public class DefaultGModelAndTable extends AbstractModelAndTable implements GMod
 		this.modelClassName = Objects.requireNonNull(modelClassName);
 		this.tableName = Objects.requireNonNull(tableName);
 		initPossessFieldAndColumns((List) fieldAndColumns);
+	}
+
+	public DefaultGModelAndTable(String modelClassName, String tableName) {
+		this.modelClassName = Objects.requireNonNull(modelClassName);
+		this.tableName = Objects.requireNonNull(tableName);
 	}
 
 	@Override
@@ -59,6 +68,26 @@ public class DefaultGModelAndTable extends AbstractModelAndTable implements GMod
 	@Override
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	@Override
+	public String getSuperClassName() {
+		return this.superClassName;
+	}
+
+	@Override
+	public void setSuperClassName(String superClassName) {
+		this.superClassName = superClassName;
+	}
+
+	@Override
+	public String getSuperClassSimpleName() {
+		return this.superClassSimpleName;
+	}
+
+	@Override
+	public void setSuperClassSimpleName(String superClassSimpleName) {
+		this.superClassSimpleName = superClassSimpleName;
 	}
 
 }

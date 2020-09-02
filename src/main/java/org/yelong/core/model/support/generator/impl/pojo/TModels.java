@@ -27,6 +27,8 @@ public final class TModels {
 		tModel.setModelNamePrefixLowerCase(modelName.substring(0, 1).toLowerCase() + modelName.substring(1));
 		tModel.setTableDesc(modelAndTable.getTableDesc());
 		tModel.setgModelAndTable(modelAndTable);
+		tModel.setSuperClassName(modelAndTable.getSuperClassName());
+		tModel.setSuperClassSimpleName(modelAndTable.getSuperClassSimpleName());
 
 		List<FieldAndColumn> fieldAndColumns = modelAndTable.getFieldAndColumns();
 		List<TModelField> modelFields = new ArrayList<TModelField>(fieldAndColumns.size());
@@ -39,14 +41,15 @@ public final class TModels {
 			String fieldName = fieldAndColumn.getFieldName();
 			tModelField.setCode(fieldName);
 			tModelField.setCodePrefixUpperCase(fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1));
-			tModelField.setLength(fieldAndColumn.getMaxLength().toString());
+			tModelField.setLength(fieldAndColumn.getMaxLength() + "");
 			tModelField.setMandatory(Boolean.toString(fieldAndColumn.isAllowNull()));
 			tModelField.setName(fieldAndColumn.getDesc());
 			tModelField.setPrimaryKey(Boolean.toString(fieldAndColumn.isPrimaryKey()));
 			tModelField.setType(fieldAndColumn.getFieldType().getSimpleName());
 			StringBuilder columnAnnotation = new StringBuilder("@Column(");
 			columnAnnotation.append("column = \"" + fieldName + "\"");
-			if (fieldAndColumn.getMaxLength() < Long.MAX_VALUE) {
+			Long maxLength = fieldAndColumn.getMaxLength();
+			if (null != maxLength && fieldAndColumn.getMaxLength() < Long.MAX_VALUE) {
 				columnAnnotation.append(",maxLength = " + fieldAndColumn.getMaxLength());
 			}
 			if (!fieldAndColumn.isAllowNull()) {

@@ -3,19 +3,15 @@
  */
 package org.yelong.core.model.support.generator.impl.map;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.yelong.commons.lang.StringUtilsE;
+import org.yelong.core.model.map.MapModel;
 import org.yelong.core.model.support.generator.GModelAndTable;
-import org.yelong.core.model.support.generator.ModelGenerateException;
 import org.yelong.core.model.support.generator.impl.pojo.DefaultPOJOModelGenerator;
 import org.yelong.core.model.support.generator.impl.pojo.TModel;
 import org.yelong.core.model.support.generator.impl.pojo.TModelField;
@@ -36,11 +32,15 @@ public class DefaultMapModelGenerator extends DefaultPOJOModelGenerator {
 	private static final String FTL_NAME = "mapModel.ftl";
 
 	@Override
-	public boolean generate(GModelAndTable m, File modelFile) throws ModelGenerateException {
-		m = execFilter(m);
-		TModel tModel = convert(m);
-		if (null == tModel) {
-			return false;
+	protected Map<String, Object> buildTemplateParams(TModel tModel) {
+		GModelAndTable m = tModel.getgModelAndTable();
+		String superClassName = tModel.getSuperClassName();
+		if (StringUtils.isBlank(superClassName)) {// 默认为MapModel
+			tModel.setSuperClassName(MapModel.class.getName());
+		}
+		String superClassPackageName = tModel.getSuperClassSimpleName();
+		if (StringUtils.isBlank(superClassPackageName)) {// 默认为MapModel
+			tModel.setSuperClassSimpleName(MapModel.class.getSimpleName());
 		}
 		EntityMap<TModel> entityTModel = new EntityMap<TModel>(tModel);
 		List<TModelField> modelFields = tModel.getModelFields();
@@ -53,20 +53,15 @@ public class DefaultMapModelGenerator extends DefaultPOJOModelGenerator {
 			entityTModelFields.add(entityTModelField);
 		}
 		entityTModel.put("modelFields", entityTModelFields);
-		try {
-			Template template = freemarkerConfiguration.getTemplate(FTL_NAME, "UTF-8");
-			Map<String, Object> root = new HashMap<>();
-			root.put("model", entityTModel);
-			root.put("existDateField", existDateField(m));
-			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(modelFile), "utf-8"));
-			// 生成word文件
-			template.process(root, writer);
-			writer.flush();
-			writer.close();
-		} catch (Exception e) {
-			throw new ModelGenerateException(e);
-		}
-		return true;
+		Map<String, Object> root = new HashMap<>();
+		root.put("model", entityTModel);
+		root.put("existDateField", existDateField(m));
+		return root;
+	}
+
+	@Override
+	protected Template getTemplate() throws Exception {
+		return freemarkerConfiguration.getTemplate(FTL_NAME, "UTF-8");
 	}
 
 }
