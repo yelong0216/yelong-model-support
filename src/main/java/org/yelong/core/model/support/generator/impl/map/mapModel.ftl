@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.yelong.core.model.annotation.Table;
 
-import ${mode.superClassName};
+import ${model.superClassName};
 
 /**
  * ${model.tableName} ${model.tableDesc}
@@ -23,13 +23,13 @@ public class ${model.modelName} extends ${model.superClassSimpleName} {
 	</#list>
 	<#list model.modelFields as modelField>
 	/**
-	 * @return ${modelField.fieldAndColumn.columnName}
+	 * @return ${modelField.columnName}
 	 */
 	public ${modelField.type} get${modelField.codePrefixUpperCase}() {
 		return get${modelField.type}(${modelField.staticFinalFieldName});
 	}
 	/**
-	 * @param ${modelField.code} ${modelField.fieldAndColumn.columnName}
+	 * @param ${modelField.code} ${modelField.columnName}
 	 */
 	public void set${modelField.codePrefixUpperCase}(${modelField.type} ${modelField.code}) {
 		set(${modelField.staticFinalFieldName},${modelField.code});

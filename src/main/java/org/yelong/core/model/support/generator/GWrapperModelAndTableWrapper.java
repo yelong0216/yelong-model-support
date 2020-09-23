@@ -12,7 +12,7 @@ public class GWrapperModelAndTableWrapper extends GModelAndTableWrapper implemen
 	public GWrapperModelAndTableWrapper(ModelAndTable modelAndTable) {
 		super(modelAndTable);
 		gModelAndTable = new DefaultGModelAndTable(modelAndTable.getModelName(),
-				modelAndTable.getModelClass().getSimpleName());
+				modelAndTable.getTableName());
 	}
 
 	@Override

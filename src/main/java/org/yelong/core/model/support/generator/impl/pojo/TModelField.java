@@ -28,6 +28,8 @@ public class TModelField {
 	
 	private FieldAndColumn fieldAndColumn;
 	
+	private String columnName;
+	
 	public String getPrimaryKey() {
 		return primaryKey;
 	}
@@ -99,5 +101,15 @@ public class TModelField {
 	public void setFieldAndColumn(FieldAndColumn fieldAndColumn) {
 		this.fieldAndColumn = fieldAndColumn;
 	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
+	
+	
 	
 }

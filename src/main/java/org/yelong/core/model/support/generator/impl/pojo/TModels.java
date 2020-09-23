@@ -46,6 +46,7 @@ public final class TModels {
 			tModelField.setName(fieldAndColumn.getDesc());
 			tModelField.setPrimaryKey(Boolean.toString(fieldAndColumn.isPrimaryKey()));
 			tModelField.setType(fieldAndColumn.getFieldType().getSimpleName());
+			tModelField.setColumnName(fieldAndColumn.getColumnName());
 			StringBuilder columnAnnotation = new StringBuilder("@Column(");
 			columnAnnotation.append("column = \"" + fieldName + "\"");
 			Long maxLength = fieldAndColumn.getMaxLength();
